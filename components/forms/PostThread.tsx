@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { createThread } from "@/lib/actions/thread.actions";
+import { createThread, editThread } from "@/lib/actions/thread.actions";
 import Image from "next/image";
 import { useUploadThing } from "@/lib/uploadthing";
 import { useState } from "react";
@@ -17,10 +17,11 @@ import { Alert, Snackbar } from "@mui/material";
 interface Props {
   userId: string;
   threadText: string;
+  threadId: string;
   threadImage: string;
 }
 
-function PostThread({ userId, threadText, threadImage }: Props) {
+function PostThread({ userId, threadText, threadImage, threadId }: Props) {
   const router = useRouter();
   const { organization } = useOrganization();
 
@@ -97,6 +98,41 @@ function PostThread({ userId, threadText, threadImage }: Props) {
     }
   };
 
+  const updateSubmit = async () => {
+    setLoading(true);
+    try {
+      if (files.length > 0) {
+        let imageToBeUpload = await startUpload(files);
+        await editThread({
+          threadId,
+          text: text,
+          path: router?.asPath,
+          image: imageToBeUpload[0]?.fileUrl,
+        });
+        console.log("image upload", imageToBeUpload);
+        router.push("/");
+        setLoading(false);
+        setNotification(true);
+      } else {
+        await editThread({
+          threadId,
+          text: text,
+          path: router?.asPath,
+          image: threadImage,
+        });
+        console.log("thread upload");
+
+        router.push("/");
+        setLoading(false);
+        setNotification(true);
+      }
+    } catch (error) {
+      // Handle createThread error here
+      console.error("Error posting thread:", error);
+      setLoading(false);
+    }
+  };
+
   return (
     <form className="mt-10 flex flex-col justify-start gap-10">
       <Snackbar
@@ -157,10 +193,11 @@ function PostThread({ userId, threadText, threadImage }: Props) {
       <Button
         type="button"
         className="bg-primary-500 d-flex gap-2 items-center justify-center"
-        onClick={onSubmit}
+        onClick={threadText ? updateSubmit : onSubmit}
         disabled={!text || loading}
       >
-        Post Stitch {loading && <CircularProgress size={18} />}
+        {`${threadText ? "Update" : "Post"}`} Stitch{" "}
+        {loading && <CircularProgress size={18} />}
       </Button>
     </form>
   );

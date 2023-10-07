@@ -7,6 +7,7 @@ import ReactThread from "../atoms/ReactThread";
 import ReactStarsRating from "../atoms/ReactStarsRating";
 import { Tooltip } from "@mui/material";
 import { getStarsReactionsState } from "@/lib/actions/thread.actions";
+import CustomImageContainer from "../common/CustomImageContainer";
 
 interface Props {
   id: string;
@@ -154,7 +155,6 @@ async function ThreadCard({
                       />
                     </Tooltip>
                     <Tooltip title="Edit" placement="top">
-                      
                       <EditThread
                         threadId={JSON.stringify(id)}
                         currentUserId={currentUserId}
@@ -169,11 +169,7 @@ async function ThreadCard({
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
             {image && (
               <>
-                <img
-                  src={image}
-                  alt="profile_icon"
-                  className="w-[60%] max-md:w-[90%] h-[600px] max-md:h-[400px] object-cover object-top border border-none rounded-md mt-2"
-                />
+                <CustomImageContainer image={image} />
               </>
             )}
 
@@ -319,12 +315,10 @@ async function ThreadCard({
             {community && ` - ${community.name} Community`}
           </p>
 
-          <Image
+          <img
             src={community.image}
             alt={community.name}
-            width={14}
-            height={14}
-            className="ml-1 rounded-full object-cover"
+            className="ml-1 rounded-full object-cover w-[16px] h-[16px]"
           />
         </Link>
       )}

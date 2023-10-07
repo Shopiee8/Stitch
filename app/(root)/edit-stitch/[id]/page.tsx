@@ -22,6 +22,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
       <PostThread
         userId={userInfo._id}
+        threadId={thread._id}
         threadText={thread.text}
         threadImage={thread.image}
       />
