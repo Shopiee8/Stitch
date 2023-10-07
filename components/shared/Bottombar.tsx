@@ -21,7 +21,9 @@ function Bottombar() {
             <Link
               href={link.route}
               key={link.label}
-              className={`bottombar_link ${isActive && "bg-primary-500"}`}
+              className={`bottombar_link`}
+              style={{background: isActive ? "linear-gradient(108deg, rgba(135,126,255,1) 10%, rgba(210,173,96,1) 90%)" : ""}}
+
             >
               <Image
                 src={link.imgURL}

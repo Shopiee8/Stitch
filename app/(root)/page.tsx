@@ -50,8 +50,12 @@ async function Home({
                 community={post.community}
                 createdAt={post.createdAt}
                 comments={post.children}
+                image={post.image}
+                video={post.video}
+                ratings={post.ratings}
                 reactions={childrenReactions[idx].users}
                 reactState={childrenReactionState[idx]}
+                isEditable={false}
               />
             ))}
           </>

@@ -48,6 +48,9 @@ async function Page({ params }: { params: { id: string } }) {
           comments={thread.children}
           reactions={parentReactions.users}
           reactState={parentReactionState}
+          image={thread.image}
+          video={thread.video}
+          ratings={thread.ratings}
         />
       </div>
 
@@ -73,6 +76,9 @@ async function Page({ params }: { params: { id: string } }) {
             comments={childItem.children}
             reactions={childrenReactions[idx].users}
             reactState={childrenReactionState[idx]}
+            image={thread.image}
+            video={thread.video}
+            ratings={thread.ratings}
             isComment
           />
         ))}

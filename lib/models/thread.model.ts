@@ -11,6 +11,20 @@ const reactionSchema = new mongoose.Schema({
   },
 });
 
+const ratingSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  stars: {
+    type: Number,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const threadSchema = new mongoose.Schema({
   text: {
     type: String,
@@ -33,6 +47,13 @@ const threadSchema = new mongoose.Schema({
     type: String,
   },
   reactions: [reactionSchema],
+  ratings: [ratingSchema],
+  image: {
+    type: String,
+  },
+  video: {
+    type: String,
+  },
   children: [
     {
       type: mongoose.Schema.Types.ObjectId,

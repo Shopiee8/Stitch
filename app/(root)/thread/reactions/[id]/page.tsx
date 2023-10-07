@@ -46,6 +46,9 @@ async function page({ params }: { params: { id: string } }) {
           comments={thread.children}
           reactions={reactions.users}
           reactState={reactionState}
+          image={thread.image}
+          video={thread.video}
+          ratings={thread.ratings}
         />
       </div>
 

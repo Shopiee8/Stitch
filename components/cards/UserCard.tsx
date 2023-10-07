@@ -20,11 +20,10 @@ function UserCard({ id, name, username, imgUrl, personType }: Props) {
     <article className="user-card">
       <div className="user-card_avatar">
         <div className="relative h-12 w-12">
-          <Image
+          <img
             src={imgUrl}
             alt="user_logo"
-            fill
-            className="rounded-full object-cover"
+            className="h-12 w-12 rounded-full object-cover"
           />
         </div>
 

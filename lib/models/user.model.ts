@@ -22,6 +22,20 @@ const reactionSchema = new mongoose.Schema({
   },
 });
 
+const ratingSchema = new mongoose.Schema({
+  threadId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Thread",
+  },
+  stars: {
+    type: Number,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -47,6 +61,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
   reactions: [reactionSchema],
+  ratings: [ratingSchema],
   onboarded: {
     type: Boolean,
     default: false,

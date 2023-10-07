@@ -37,7 +37,9 @@ async function Explore({
 
       <section className="mt-9 flex flex-col gap-10">
         {result.posts.length === 0 ? (
-          <p className="no-result">No threads found</p>
+          <p className="no-result">
+            Begin following someone to explore their feed here.
+          </p>
         ) : (
           <>
             {result.posts.map((post, idx) => (
@@ -53,6 +55,9 @@ async function Explore({
                 comments={post.children}
                 reactions={childrenReactions[idx].users}
                 reactState={childrenReactionState[idx]}
+                image={post.image}
+                video={post.video}
+                ratings={post.ratings}
               />
             ))}
           </>

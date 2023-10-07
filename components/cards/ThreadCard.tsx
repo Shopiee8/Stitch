@@ -1,10 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-
 import { formatDateString } from "@/lib/utils";
 import DeleteThread from "../forms/DeleteThread";
 import EditThread from "../atoms/EditThread";
 import ReactThread from "../atoms/ReactThread";
+import ReactStarsRating from "../atoms/ReactStarsRating";
+import { Tooltip } from "@mui/material";
+import { getStarsReactionsState } from "@/lib/actions/thread.actions";
 
 interface Props {
   id: string;
@@ -34,11 +36,15 @@ interface Props {
     name: string;
     username: string;
   }[];
+  image: string;
+  video: string;
+  ratings: [];
   isComment?: boolean;
   reactState?: boolean;
+  isEditable: boolean;
 }
 
-function ThreadCard({
+async function ThreadCard({
   id,
   currentUserId,
   parentId,
@@ -50,22 +56,40 @@ function ThreadCard({
   reactions,
   isComment,
   reactState,
+  image,
+  video,
+  ratings,
+  isEditable,
 }: Props) {
+  let ratingsStars = ratings?.map((rating) => rating?.stars);
+  let sumRatings = 0;
+
+  for (let i = 0; i < ratingsStars?.length; i++) {
+    sumRatings += ratingsStars[i];
+  }
+
+  let averageRatings =
+    ratingsStars?.length > 0 ? sumRatings / ratingsStars?.length : 0;
+
+  let ratedStars = await getStarsReactionsState({
+    threadId: id,
+    userId: currentUserId,
+  });
+
   return (
     <article
       className={`flex w-full flex-col rounded-xl ${
-        isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7"
+        isComment ? "px-0 xs:px-7" : "bg-dark-2 p-7 max-md:px-2 max-md:py-3"
       }`}
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between ">
         <div className="flex w-full flex-1 flex-row gap-4">
           <div className="flex flex-col items-center">
             <Link href={`/profile/${author.id}`} className="relative h-11 w-11">
-              <Image
+              <img
                 src={author.image}
                 alt="Profile image"
-                fill
-                className="cursor-pointer rounded-full"
+                className=" h-11 w-11 cursor-pointer rounded-full"
               />
             </Link>
 
@@ -73,16 +97,88 @@ function ThreadCard({
           </div>
 
           <div className="flex w-full flex-col">
-            <Link href={`/profile/${author.id}`} className="w-fit">
-              <h4 className="cursor-pointer text-base-semibold text-light-1">
-                {author.name}
-              </h4>
-            </Link>
+            <div className="flex justify-between items-center">
+              <Link
+                href={`/profile/${author.id}`}
+                className="w-fit flex gap-2 items-center"
+              >
+                <h4 className="cursor-pointer text-base-semibold text-light-1">
+                  {author.name}
+                </h4>
+              </Link>
+              {ratings ? (
+                <>
+                  <div className="flex gap-2 items-bottom">
+                    <Image
+                      src="/assets/star-icon.svg"
+                      alt="star"
+                      width={14}
+                      height={14}
+                      className="cursor-pointer object-contain -mt-[0.15rem]"
+                    />
+                    <div className="flex gap-1 items-center">
+                      <div className="text-small-semibold text-light-1">
+                        {averageRatings}
+                      </div>
+                      <div className="text-small-semibold text-light-1 cursor-pointer">
+                        {ratings.length > 0 ? `(${ratings.length})` : ""}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-2 items-center">
+                    <div className=" text-small-semibold text-light-1">0</div>
+                    <Image
+                      src="/assets/star-icon.svg"
+                      alt="star"
+                      width={14}
+                      height={14}
+                      className="cursor-pointer object-contain -mt-[0.15rem]"
+                    />
+                  </div>
+                </>
+              )}
+
+              {isEditable && (
+                <>
+                  <div className="flex flex-row gap-2">
+                    <Tooltip title="Delete" placement="top">
+                      <DeleteThread
+                        threadId={JSON.stringify(id)}
+                        currentUserId={currentUserId}
+                        authorId={author.id}
+                        parentId={parentId}
+                        isComment={isComment}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Edit" placement="top">
+                      
+                      <EditThread
+                        threadId={JSON.stringify(id)}
+                        currentUserId={currentUserId}
+                        authorId={author.id}
+                      />
+                    </Tooltip>
+                  </div>
+                </>
+              )}
+            </div>
 
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
+            {image && (
+              <>
+                <img
+                  src={image}
+                  alt="profile_icon"
+                  className="w-[60%] max-md:w-[90%] h-[600px] max-md:h-[400px] object-cover object-top border border-none rounded-md mt-2"
+                />
+              </>
+            )}
 
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
-              <div className="flex gap-3.5">
+              <div className="flex gap-3.5 items-center">
                 <ReactThread
                   threadId={id}
                   currentUserId={currentUserId}
@@ -91,27 +187,38 @@ function ThreadCard({
                   isComment={isComment}
                 />
                 <Link href={`/thread/${id}`}>
+                  <Tooltip title="Comment" placement="top">
+                    <Image
+                      src="/assets/reply.svg"
+                      alt="reply"
+                      width={24}
+                      height={24}
+                      className="cursor-pointer object-contain"
+                    />
+                  </Tooltip>
+                </Link>
+                <Tooltip title="Repost" placement="top">
                   <Image
-                    src="/assets/reply.svg"
-                    alt="reply"
+                    src="/assets/repost.svg"
+                    alt="repost"
                     width={24}
                     height={24}
                     className="cursor-pointer object-contain"
                   />
-                </Link>
-                <Image
-                  src="/assets/repost.svg"
-                  alt="repost"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
-                <Image
-                  src="/assets/share.svg"
-                  alt="share"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
+                </Tooltip>
+                {/* <Tooltip title="Share" placement="top">
+                  <Image
+                    src="/assets/share.svg"
+                    alt="share"
+                    width={24}
+                    height={24}
+                    className="cursor-pointer object-contain"
+                  />
+                </Tooltip> */}
+                <ReactStarsRating
+                  threadId={id}
+                  userId={currentUserId}
+                  ratedStars={ratedStars}
                 />
               </div>
 
@@ -145,21 +252,6 @@ function ThreadCard({
             </div>
           </div>
         </div>
-
-        <div className="flex flex-row gap-2">
-          <DeleteThread
-            threadId={JSON.stringify(id)}
-            currentUserId={currentUserId}
-            authorId={author.id}
-            parentId={parentId}
-            isComment={isComment}
-          />
-          <EditThread
-            threadId={JSON.stringify(id)}
-            currentUserId={currentUserId}
-            authorId={author.id}
-          />
-        </div>
       </div>
 
       <div className="flex flex-row gap-2">
@@ -168,15 +260,13 @@ function ThreadCard({
             {comments.length > 0 && (
               <div className="ml-1 mt-3 flex items-center gap-2">
                 {comments.slice(0, 2).map((comment, index) => (
-                  <Image
+                  <img
                     key={index}
                     src={comment.author.image}
                     alt={`user_${index}`}
-                    width={24}
-                    height={24}
                     className={`${
                       index !== 0 && "-ml-5"
-                    } rounded-full object-cover`}
+                    } h-[24px] w-[24px] rounded-full object-cover`}
                   />
                 ))}
 
@@ -198,15 +288,13 @@ function ThreadCard({
             {reactions.length > 0 && (
               <div className="ml-1 mt-3 flex items-center gap-2">
                 {reactions.slice(0, 2).map((reaction, index) => (
-                  <Image
+                  <img
                     key={index}
                     src={reaction.image}
                     alt={`user_${index}`}
-                    width={24}
-                    height={24}
                     className={`${
                       index !== 0 && "-ml-5"
-                    } rounded-full object-cover`}
+                    } rounded-full h-[24px] w-[24px]  object-cover`}
                   />
                 ))}
 

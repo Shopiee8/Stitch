@@ -4,6 +4,7 @@ import Image from "next/image";
 import React from "react";
 import { usePathname } from "next/navigation";
 import { addReactToThread } from "@/lib/actions/thread.actions";
+import { Tooltip } from "@mui/material";
 
 interface Props {
   threadId: string;
@@ -31,14 +32,18 @@ const ReactThread = ({
   };
 
   return (
-    <Image
-      src={`/assets/heart-${interactState ? "filled" : "gray"}.svg`}
-      alt="heart"
-      width={24}
-      height={24}
-      className="cursor-pointer object-contain"
-      onClick={handleClick}
-    />
+    <>
+      <Tooltip title={!interactState ? "Like" : "Unlike"} placement="top">
+        <Image
+          src={`/assets/heart-${interactState ? "filled" : "gray"}.svg`}
+          alt="heart"
+          width={24}
+          height={24}
+          className="cursor-pointer object-contain"
+          onClick={handleClick}
+        />
+      </Tooltip>
+    </>
   );
 };
 

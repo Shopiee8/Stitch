@@ -7,8 +7,8 @@ import { dark } from "@clerk/themes";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: "Threads",
-  description: "A Next.js 13 Meta Threads Application clone",
+  title: "Stitch",
+  description: "Social platform.",
 };
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,7 +25,7 @@ export default function RootLayout({
       }}
     >
       <html lang="en">
-        <body className={`bg-clerk-auth ${inter.className} `}>
+        <body className={`bg-dark-1 ${inter.className} `}>
           <div className="flex min-h-screen w-full items-center justify-center">
             {children}
           </div>

@@ -56,12 +56,10 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
           render={({ field }) => (
             <FormItem className="flex w-full items-center gap-3">
               <FormLabel>
-                <Image
+                <img
                   src={currentUserImg}
                   alt="Profile image"
-                  width={48}
-                  height={48}
-                  className="rounded-full object-cover"
+                  className="h-[48px] w-[48px] rounded-full object-cover"
                 />
               </FormLabel>
               <FormControl className="border-none bg-transparent">

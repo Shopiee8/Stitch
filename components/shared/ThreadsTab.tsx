@@ -31,6 +31,9 @@ interface Result {
         image: string;
       };
     }[];
+    image: string;
+    video: string;
+    ratings: [];
   }[];
 }
 
@@ -93,6 +96,10 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
           comments={thread.children}
           reactions={childrenReactions[idx].users}
           reactState={childrenReactionState[idx]}
+          image={thread.image}
+          video={thread.video}
+          ratings={thread.ratings}
+          isEditable={true}
         />
       ))}
     </section>

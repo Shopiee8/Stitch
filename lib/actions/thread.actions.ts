@@ -90,6 +90,31 @@ export async function isThreadReactedByUser({
     );
   }
 }
+
+export async function isThreadStaredByUser({
+  threadId,
+  userId,
+}: {
+  threadId: string;
+  userId: string;
+}) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findOne({ _id: threadId });
+
+    const isReacted: any = thread.ratings.some((reaction: any) =>
+      reaction.user.equals(userId)
+    );
+
+    return !!isReacted;
+  } catch (error: any) {
+    throw new Error(
+      `Failed to check if thread is reacted by user: ${error.message}`
+    );
+  }
+}
+
 export async function getReactedUsersByThread(threadId: string) {
   try {
     connectToDB();
@@ -160,6 +185,7 @@ interface Params {
   author: string;
   communityId: string | null;
   path: string;
+  image: string | null;
 }
 
 export async function editThread({
@@ -194,6 +220,7 @@ export async function createThread({
   author,
   communityId,
   path,
+  image,
 }: Params) {
   try {
     connectToDB();
@@ -207,6 +234,7 @@ export async function createThread({
       text,
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
+      image,
     });
 
     // Update User model
@@ -387,6 +415,115 @@ export async function addReactToThread({
     await user.save();
 
     revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to add reaction to thread: ${error.message}`);
+  }
+}
+
+export async function addStarsToThread({
+  threadId,
+  userId,
+  path,
+  stars,
+}: {
+  threadId: string;
+  userId: string;
+  path: string;
+  stars: number;
+}) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findById(threadId);
+    const user = await User.findOne({ id: userId });
+
+    if (!thread) {
+      throw new Error("Thread not found");
+    }
+
+    const isAlreadyStared = await isThreadStaredByUser({
+      threadId: thread._id.toString(),
+      userId: user._id.toString(),
+    });
+
+    if (isAlreadyStared) {
+      const ratingIndex = thread.ratings.findIndex((rating) =>
+        rating.user.equals(user._id)
+      );
+
+      if (ratingIndex !== -1) {
+        thread.ratings[ratingIndex].stars = stars;
+      }
+    } else {
+      thread.ratings.push({
+        user: user._id,
+        stars,
+      });
+    }
+
+    await thread.save();
+
+    if (isAlreadyStared) {
+      const ratingIndex = user.ratings.findIndex((rating) =>
+        rating.threadId.equals(threadId)
+      );
+
+      if (ratingIndex !== -1) {
+        user.ratings[ratingIndex].stars = stars;
+      }
+    } else {
+      user.ratings.push({
+        threadId: threadId,
+        stars,
+      });
+    }
+
+    await user.save();
+
+    // Assuming revalidatePath is an async function that triggers some kind of path revalidation
+    await revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to add reaction to thread: ${error.message}`);
+  }
+}
+
+export async function getStarsReactionsState({
+  threadId,
+  userId,
+}: {
+  threadId: string;
+  userId: string;
+}) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findById(threadId);
+    const user = await User.findOne({ id: userId });
+
+    if (!thread) {
+      throw new Error("Thread not found");
+    }
+
+    const isAlreadyStared = await isThreadStaredByUser({
+      threadId: thread._id.toString(),
+      userId: user._id.toString(),
+    });
+
+    let ratedStars;
+
+    if (isAlreadyStared) {
+      const ratingIndex = thread.ratings.findIndex((rating) =>
+        rating.user.equals(user._id)
+      );
+
+      if (ratingIndex !== -1) {
+        ratedStars = thread.ratings[ratingIndex].stars;
+      }
+    } else {
+      ratedStars = 0;
+    }
+
+    return ratedStars;
   } catch (error: any) {
     throw new Error(`Failed to add reaction to thread: ${error.message}`);
   }

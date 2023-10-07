@@ -44,12 +44,10 @@ async function Page({ params }: { params: { id: string } }) {
           <TabsList className="tab">
             {profileTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                <Image
+                <img
                   src={tab.icon}
                   alt={tab.label}
-                  width={24}
-                  height={24}
-                  className="object-contain"
+                  className="h-[24px] w-[24px] object-cover"
                 />
                 <p className="max-sm:hidden">{tab.label}</p>
                 {tab.label === "Threads" && (
