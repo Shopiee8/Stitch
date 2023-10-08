@@ -33,6 +33,8 @@ async function Page({ params }: { params: { id: string } }) {
     parentReactionState,
     childrenReactions,
     childrenReactionState,
+    childrenRatings,
+    childrenRatingsState
   } = reactionsData;
 
   return (
@@ -77,10 +79,9 @@ async function Page({ params }: { params: { id: string } }) {
             comments={childItem.children}
             reactions={childrenReactions[idx].users}
             reactState={childrenReactionState[idx]}
-            image={thread.image}
-            video={thread.video}
-            ratings={thread.ratings}
+            ratings={childItem.ratings}
             isComment
+            isEditable={true}
           />
         ))}
       </div>

@@ -645,11 +645,16 @@ export async function getReactionsData({
         Promise.all(
           posts.map(async (post) => {
             const reactedUsers = await getReactedUsersByThread(post._id);
+            const ratedUser = await getRatedUserByThread(post._id);
             const reactedByUser = await isThreadReactedByUser({
               threadId: post._id,
               userId,
             });
-            return { reactedUsers, reactedByUser };
+            const ratedByUser = await isThreadStaredByUser({
+              threadId: post._id,
+              userId,
+            });
+            return { reactedUsers, reactedByUser, ratedUser, ratedByUser};
           })
         ),
       ]);
@@ -661,11 +666,20 @@ export async function getReactionsData({
       (data: any) => data.reactedByUser
     );
 
+    const childrenRatings = childrenData.map(
+      (data: any) => data.ratedUser
+    );
+    const childrenRatingsState = childrenData.map(
+      (data: any) => data.ratedByUser
+    );
+
     return {
       parentReactions,
       parentReactionState,
       childrenReactions,
       childrenReactionState,
+      childrenRatings,
+      childrenRatingsState
     };
   } catch (error: any) {
     throw new Error(`Failed to get reactions data: ${error.message}`);

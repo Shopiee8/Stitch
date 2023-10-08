@@ -5,9 +5,6 @@ import ModalImage from "react-modal-image";
 import { Image, Space } from "antd";
 import {
   DownloadOutlined,
-  RotateLeftOutlined,
-  RotateRightOutlined,
-  SwapOutlined,
   ZoomInOutlined,
   ZoomOutOutlined,
 } from "@ant-design/icons";
@@ -50,19 +47,15 @@ export default function CustomImageContainer({ image }) {
               {
                 transform: { scale },
                 actions: {
-                  onFlipY,
-                  onFlipX,
-                  onRotateLeft,
-                  onRotateRight,
                   onZoomOut,
                   onZoomIn,
                 },
               }
             ) => (
-              <Space size={12} className="toolbar-wrapper">
-                <DownloadOutlined onClick={onDownload} />
-                <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
-                <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+              <Space size={24} className="toolbar-wrapper">
+                <DownloadOutlined className=" text-[24px]" onClick={onDownload} />
+                <ZoomOutOutlined className=" text-[24px]" disabled={scale === 1} onClick={onZoomOut} />
+                <ZoomInOutlined className=" text-[24px]" disabled={scale === 50} onClick={onZoomIn} />
               </Space>
             ),
           }}
