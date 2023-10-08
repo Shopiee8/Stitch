@@ -71,7 +71,7 @@ async function ThreadsTab({ currentUserId, accountId, accountType }: Props) {
 
   return (
     <section className="mt-9 flex flex-col gap-10">
-      {result.threads.map((thread, idx) => (
+      {result.threads?.reverse()?.map((thread, idx) => (
         <ThreadCard
           key={thread._id}
           id={thread._id}

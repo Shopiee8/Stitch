@@ -136,6 +136,27 @@ export async function getReactedUsersByThread(threadId: string) {
   }
 }
 
+export async function getRatedUserByThread(threadId: string) {
+  try {
+    connectToDB();
+
+    const thread = await Thread.findOne({ _id: threadId });
+
+    const ratedIserIds = thread.ratings.map(
+      (rating: any) => rating.user
+    );
+
+    const ratedUsers = await fetchUsers({
+      userId: "INVALID_USER_ID",
+      userIds: ratedIserIds,
+    });
+
+    return ratedUsers;
+  } catch (error: any) {
+    throw new Error(`Failed to get reacted users: ${error.message}`);
+  }
+}
+
 export async function fetchPosts(pageNumber = 1, pageSize = 20) {
   try {
     connectToDB();

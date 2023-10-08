@@ -99,33 +99,75 @@ async function ThreadCard({
 
           <div className="flex w-full flex-col">
             <div className="flex justify-between items-center">
-              <Link
-                href={`/profile/${author.id}`}
-                className="w-fit flex gap-2 items-center"
-              >
-                <h4 className="cursor-pointer text-base-semibold text-light-1">
-                  {author.name}
-                </h4>
-              </Link>
+              <div className="flex gap-2">
+                <Link
+                  href={`/profile/${author.id}`}
+                  className="w-fit flex gap-2 items-center"
+                >
+                  <h4 className="cursor-pointer text-base-semibold text-light-1">
+                    {author.name}
+                  </h4>
+                </Link>
+                {ratings ? (
+                  <>
+                    <Tooltip title="User Average Ratings" placement="top">
+                      <div className="flex gap-2 items-bottom cursor-pointer">
+                        <Image
+                          src="/assets/star-icon.svg"
+                          alt="star"
+                          width={14}
+                          height={14}
+                          className="cursor-pointer object-contain -mt-[0.15rem]"
+                        />
+                        <div className="flex gap-1 items-center">
+                          <div className="text-small-semibold text-light-1">
+                            {averageRatings}
+                          </div>
+                          {/* <div className="text-small-semibold text-light-1 cursor-pointer">
+                          {ratings.length > 0 ? `(${ratings.length})` : ""}
+                        </div> */}
+                        </div>
+                      </div>
+                    </Tooltip>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex gap-2 items-center">
+                      <div className=" text-small-semibold text-light-1">0</div>
+                      <Image
+                        src="/assets/star-icon.svg"
+                        alt="star"
+                        width={14}
+                        height={14}
+                        className="cursor-pointer object-contain -mt-[0.15rem]"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
               {ratings ? (
                 <>
-                  <div className="flex gap-2 items-bottom">
-                    <Image
-                      src="/assets/star-icon.svg"
-                      alt="star"
-                      width={14}
-                      height={14}
-                      className="cursor-pointer object-contain -mt-[0.15rem]"
-                    />
-                    <div className="flex gap-1 items-center">
-                      <div className="text-small-semibold text-light-1">
-                        {averageRatings}
+                  <Tooltip title="Stitch Average Ratings" placement="top">
+                    <Link href={`/thread/ratings/${id}`}>
+                      <div className="flex gap-2 items-bottom cursor-pointer">
+                        <Image
+                          src="/assets/star-icon.svg"
+                          alt="star"
+                          width={14}
+                          height={14}
+                          className="cursor-pointer object-contain -mt-[0.15rem]"
+                        />
+                        <div className="flex gap-1 items-center">
+                          <div className="text-small-semibold text-light-1">
+                            {averageRatings}
+                          </div>
+                          <div className="text-small-semibold text-light-1 cursor-pointer">
+                            {ratings.length > 0 ? `(${ratings.length})` : ""}
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-small-semibold text-light-1 cursor-pointer">
-                        {ratings.length > 0 ? `(${ratings.length})` : ""}
-                      </div>
-                    </div>
-                  </div>
+                    </Link>
+                  </Tooltip>
                 </>
               ) : (
                 <>

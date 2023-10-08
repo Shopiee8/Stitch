@@ -7,8 +7,8 @@ import ThreadCard from "@/components/cards/ThreadCard";
 import { fetchUser } from "@/lib/actions/user.actions";
 import {
   fetchThreadById,
-  getReactedUsersByThread,
-  isThreadReactedByUser,
+  getRatedUserByThread,
+  isThreadStaredByUser,
 } from "@/lib/actions/thread.actions";
 import UserCard from "@/components/cards/UserCard";
 
@@ -25,9 +25,9 @@ async function page({ params }: { params: { id: string } }) {
 
   const thread = await fetchThreadById(params.id);
 
-  const reactions = await getReactedUsersByThread(thread._id);
+  const reactions = await getRatedUserByThread(thread._id);
 
-  const reactionState = await isThreadReactedByUser({
+  const reactionState = await isThreadStaredByUser({
     threadId: thread._id,
     userId: userInfo._id,
   });
@@ -61,7 +61,7 @@ async function page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="mt-10">
-        <h1 className="head-text mb-10">People who likes this stitch</h1>
+        <h1 className="head-text mb-10">People who rated this stitch</h1>
         {thread.reactionsCount === 0 ? (
           <p className="no-result">No users found</p>
         ) : (

@@ -2,15 +2,72 @@
 
 import React from "react";
 import ModalImage from "react-modal-image";
-
+import { Image, Space } from "antd";
+import {
+  DownloadOutlined,
+  RotateLeftOutlined,
+  RotateRightOutlined,
+  SwapOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from "@ant-design/icons";
 export default function CustomImageContainer({ image }) {
+  const onDownload = () => {
+    fetch(image)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "image.png";
+        document.body.appendChild(link);
+        link.click();
+        URL.revokeObjectURL(url);
+        link.remove();
+      });
+  };
   return (
     <>
-      <ModalImage
+      {/* <ModalImage
         small={image}
         large={image}
+        zoom={true}
         className="w-[60%] max-md:w-[96%] h-[600px] max-md:h-[400px] object-cover object-top border border-none rounded-md mt-2 cursor-pointer"
-      />
+      /> */}
+      {/* <Image src={image} /> */}
+      <div className="mt-4 cursor-pointer h-100 w-100">
+        <Image
+          src={image}
+          PreviewType={{
+            visible: false,
+          }}
+          preview={{
+            mask: false,
+            maskProps: false,
+            maskClosable: false,
+            toolbarRender: (
+              _,
+              {
+                transform: { scale },
+                actions: {
+                  onFlipY,
+                  onFlipX,
+                  onRotateLeft,
+                  onRotateRight,
+                  onZoomOut,
+                  onZoomIn,
+                },
+              }
+            ) => (
+              <Space size={12} className="toolbar-wrapper">
+                <DownloadOutlined onClick={onDownload} />
+                <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut} />
+                <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn} />
+              </Space>
+            ),
+          }}
+        />
+      </div>
     </>
   );
 }

@@ -141,7 +141,7 @@ export async function fetchUserPosts(userId: string) {
 
     // Find all threads authored by the user with the given userId
     const threads = await User.findOne({ id: userId })
-      .sort({ createdAt: -1 })
+      .sort({ "threads.createdAt": -1 })
       .populate({
         path: "threads",
         model: Thread,
