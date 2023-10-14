@@ -119,23 +119,12 @@ async function ThreadCard({
                 <>
                   <Link href={`/thread/ratings/${id}`}>
                     <div className="flex gap-2 items-bottom cursor-pointer">
-                      {/* <Image
-                          src="/assets/star-icon.svg"
-                          alt="star"
-                          width={14}
-                          height={14}
-                          className="cursor-pointer object-contain -mt-[0.15rem]"
-                        /> */}
                       <div className="flex gap-1 items-center">
-                        {/* <div className="text-small-semibold text-light-1">
-                            {averageRatings} 
-                          </div> */}
                         <div className="text-small-semibold text-light-1 cursor-pointer">
                           {ratings.length > 0 ? (
                             <div>
                               {ratings?.length}
-                              {ratings.length > 1 ? " folks" : " folk"} rated
-                              this post 🙏
+                              {ratings.length > 1 ? " folks" : " folk"} rated 🙏
                             </div>
                           ) : (
                             ""

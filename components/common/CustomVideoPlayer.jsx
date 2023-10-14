@@ -80,23 +80,19 @@ export default function CustomVideoPlayer({ url }) {
   return (
     <div className="relative h-100 w-100 bg-dark-3">
       <div
-        className={`h-[100%] w-[100%] absolute cursor-pointer flex items-center justify-center z-10 transition-all ${
-          isPlaying && "hover:opacity-100 opacity-0"
-        }`}
+        className={`h-[100%] w-[100%] absolute cursor-pointer flex items-center justify-center z-10 transition-all`}
         onClick={togglePlayPause}
       >
         {buffering ? (
           <div>
             <CircularProgress size={36} />
           </div>
-        ) : isPlaying ? (
-          <div>
-            <FaCirclePause style={{ fontSize: "48px" }} color="#fff" />
-          </div>
         ) : (
-          <div className="transition-all">
-            <FaCirclePlay style={{ fontSize: "48px" }} color="#fff" />
-          </div>
+          isPlaying && (
+            <div>
+              <FaCirclePlay style={{ fontSize: "48px" }} color="#fff" />
+            </div>
+          )
         )}
       </div>
       <div
