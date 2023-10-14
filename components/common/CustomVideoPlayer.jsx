@@ -88,7 +88,7 @@ export default function CustomVideoPlayer({ url }) {
             <CircularProgress size={36} />
           </div>
         ) : (
-          isPlaying && (
+          !isPlaying && (
             <div>
               <FaCirclePlay style={{ fontSize: "48px" }} color="#fff" />
             </div>
