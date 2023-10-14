@@ -18,7 +18,7 @@ async function Page({ params }: { params: { id: string } }) {
 
   return (
     <section>
-      <ProfileHeader
+      {/* <ProfileHeader
         userId={user.id}
         accountId={communityDetails.id}
         authUserId={user.id}
@@ -27,7 +27,7 @@ async function Page({ params }: { params: { id: string } }) {
         imgUrl={communityDetails.image}
         bio={communityDetails.bio}
         type='Community'
-      />
+      /> */}
 
       <div className='mt-9'>
         <Tabs defaultValue='threads' className='w-full'>
