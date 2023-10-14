@@ -74,7 +74,7 @@ export async function fetchCommunityPosts(id: string) {
   try {
     connectToDB();
 
-    const communityPosts = await Community.findById(id).sort({ "threads.ratings.stars": -1, createdAt: -1 }).populate({
+    const communityPosts = await Community.findById(id).sort({ createdAt: -1 }).populate({
       path: "threads",
       model: Thread,
       populate: [

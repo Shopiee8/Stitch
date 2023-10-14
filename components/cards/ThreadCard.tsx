@@ -170,29 +170,6 @@ async function ThreadCard({
                   </div>
                 </>
               )}
-
-              {isEditable && (
-                <>
-                  <div className="flex flex-row gap-2">
-                    <Tooltip title="Delete" placement="top">
-                      <DeleteThread
-                        threadId={JSON.stringify(id)}
-                        currentUserId={currentUserId}
-                        authorId={author.id}
-                        parentId={parentId}
-                        isComment={isComment}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Edit" placement="top">
-                      <EditThread
-                        threadId={JSON.stringify(id)}
-                        currentUserId={currentUserId}
-                        authorId={author.id}
-                      />
-                    </Tooltip>
-                  </div>
-                </>
-              )}
             </div>
             <div className="flex gap-2 items-center">
               {averageStars ? (
