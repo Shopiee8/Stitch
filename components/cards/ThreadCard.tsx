@@ -8,6 +8,8 @@ import ReactStarsRating from "../atoms/ReactStarsRating";
 import { Tooltip } from "@mui/material";
 import { getStarsReactionsState } from "@/lib/actions/thread.actions";
 import CustomImageContainer from "../common/CustomImageContainer";
+import { fetchUser, getUserAverageRatings } from "@/lib/actions/user.actions";
+import CustomVideoPlayer from "../common/CustomVideoPlayer";
 
 interface Props {
   id: string;
@@ -70,12 +72,16 @@ async function ThreadCard({
   }
 
   let averageRatings =
-    ratingsStars?.length > 0 ? sumRatings / ratingsStars?.length : 0;
+    ratingsStars?.length > 0
+      ? Math.round(sumRatings / ratingsStars?.length)
+      : 0;
 
   let ratedStars = await getStarsReactionsState({
     threadId: id,
     userId: currentUserId,
   });
+  const dbUser = await fetchUser(author.id);
+  const averageStars = await getUserAverageRatings(dbUser._id);
 
   return (
     <article
@@ -99,7 +105,7 @@ async function ThreadCard({
 
           <div className="flex w-full flex-col">
             <div className="flex justify-between items-center">
-              <div className="flex gap-2">
+              <div>
                 <Link
                   href={`/profile/${author.id}`}
                   className="w-fit flex gap-2 items-center"
@@ -108,66 +114,36 @@ async function ThreadCard({
                     {author.name}
                   </h4>
                 </Link>
-                {ratings ? (
-                  <>
-                    <Tooltip title="User Average Ratings" placement="top">
-                      <div className="flex gap-2 items-bottom cursor-pointer">
-                        <Image
-                          src="/assets/star-icon.svg"
-                          alt="star"
-                          width={14}
-                          height={14}
-                          className="cursor-pointer object-contain -mt-[0.15rem]"
-                        />
-                        <div className="flex gap-1 items-center">
-                          <div className="text-small-semibold text-light-1">
-                            {averageRatings}
-                          </div>
-                          {/* <div className="text-small-semibold text-light-1 cursor-pointer">
-                          {ratings.length > 0 ? `(${ratings.length})` : ""}
-                        </div> */}
-                        </div>
-                      </div>
-                    </Tooltip>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex gap-2 items-center">
-                      <div className=" text-small-semibold text-light-1">0</div>
-                      <Image
-                        src="/assets/star-icon.svg"
-                        alt="star"
-                        width={14}
-                        height={14}
-                        className="cursor-pointer object-contain -mt-[0.15rem]"
-                      />
-                    </div>
-                  </>
-                )}
               </div>
               {ratings ? (
                 <>
-                  <Tooltip title="Stitch Average Ratings" placement="top">
-                    <Link href={`/thread/ratings/${id}`}>
-                      <div className="flex gap-2 items-bottom cursor-pointer">
-                        <Image
+                  <Link href={`/thread/ratings/${id}`}>
+                    <div className="flex gap-2 items-bottom cursor-pointer">
+                      {/* <Image
                           src="/assets/star-icon.svg"
                           alt="star"
                           width={14}
                           height={14}
                           className="cursor-pointer object-contain -mt-[0.15rem]"
-                        />
-                        <div className="flex gap-1 items-center">
-                          <div className="text-small-semibold text-light-1">
-                            {averageRatings}
-                          </div>
-                          <div className="text-small-semibold text-light-1 cursor-pointer">
-                            {ratings.length > 0 ? `(${ratings.length})` : ""}
-                          </div>
+                        /> */}
+                      <div className="flex gap-1 items-center">
+                        {/* <div className="text-small-semibold text-light-1">
+                            {averageRatings} 
+                          </div> */}
+                        <div className="text-small-semibold text-light-1 cursor-pointer">
+                          {ratings.length > 0 ? (
+                            <div>
+                              {ratings?.length}
+                              {ratings.length > 1 ? " folks" : " folk"} rated
+                              this post 🙏
+                            </div>
+                          ) : (
+                            ""
+                          )}
                         </div>
                       </div>
-                    </Link>
-                  </Tooltip>
+                    </div>
+                  </Link>
                 </>
               ) : (
                 <>
@@ -207,6 +183,41 @@ async function ThreadCard({
                 </>
               )}
             </div>
+            <div className="flex gap-2 items-center">
+              {averageStars ? (
+                <>
+                  <Tooltip title="User Average Ratings" placement="top">
+                    <div className="flex gap-1 items-bottom cursor-pointer">
+                      <Image
+                        src="/assets/star-icon.svg"
+                        alt="star"
+                        width={14}
+                        height={14}
+                        className="cursor-pointer object-contain -mt-[0.15rem]"
+                      />
+                      <div className="flex gap-1 items-center">
+                        <div className="text-small-semibold text-light-1">
+                          {averageStars}
+                        </div>
+                      </div>
+                    </div>
+                  </Tooltip>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-2 items-center">
+                    <div className=" text-small-semibold text-light-1">0</div>
+                    <Image
+                      src="/assets/star-icon.svg"
+                      alt="star"
+                      width={14}
+                      height={14}
+                      className="cursor-pointer object-contain -mt-[0.15rem]"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
 
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
             {image && (
@@ -215,6 +226,11 @@ async function ThreadCard({
               </>
             )}
 
+            {video && (
+              <div className="mt-4">
+                <CustomVideoPlayer url={video} />
+              </div>
+            )}
             <div className={`${isComment && "mb-10"} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5 items-center">
                 <ReactThread
@@ -236,13 +252,15 @@ async function ThreadCard({
                   </Tooltip>
                 </Link>
                 <Tooltip title="Repost" placement="top">
-                  <Image
-                    src="/assets/repost.svg"
-                    alt="repost"
-                    width={24}
-                    height={24}
-                    className="cursor-pointer object-contain"
-                  />
+                  <Link href={`/repost-stitch/${id}`}>
+                    <Image
+                      src="/assets/repost.svg"
+                      alt="repost"
+                      width={24}
+                      height={24}
+                      className="cursor-pointer object-contain"
+                    />
+                  </Link>
                 </Tooltip>
                 {/* <Tooltip title="Share" placement="top">
                   <Image

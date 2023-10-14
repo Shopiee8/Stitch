@@ -142,9 +142,7 @@ export async function getRatedUserByThread(threadId: string) {
 
     const thread = await Thread.findOne({ _id: threadId });
 
-    const ratedIserIds = thread.ratings.map(
-      (rating: any) => rating.user
-    );
+    const ratedIserIds = thread.ratings.map((rating: any) => rating.user);
 
     const ratedUsers = await fetchUsers({
       userId: "INVALID_USER_ID",
@@ -154,6 +152,37 @@ export async function getRatedUserByThread(threadId: string) {
     return ratedUsers;
   } catch (error: any) {
     throw new Error(`Failed to get reacted users: ${error.message}`);
+  }
+}
+
+export async function getAllRatedUserByUserId(userId: any) {
+  try {
+    connectToDB();
+
+    // Find all threads where the user is the author
+    const threads = await Thread.find({ author: userId });
+
+    // Initialize an array to store unique rated user IDs
+    const ratedUserIds = [];
+
+    // Loop through each thread and extract rated user IDs
+    threads.forEach((thread) => {
+      thread.ratings.forEach((rating) => {
+        if (!ratedUserIds.includes(rating.user)) {
+          ratedUserIds.push(rating.user);
+        }
+      });
+    });
+
+    // Fetch user details for the rated user IDs
+    const ratedUsers = await fetchUsers({
+      userId: "INVALID_USER_ID",
+      userIds: ratedUserIds,
+    });
+
+    return ratedUsers; // Return the array of rated users
+  } catch (error) {
+    throw new Error(`Failed to get rated users: ${error.message}`);
   }
 }
 
@@ -207,6 +236,7 @@ interface Params {
   communityId: string | null;
   path: string;
   image: string | null;
+  video: string | null;
 }
 
 export async function editThread({
@@ -245,6 +275,7 @@ export async function createThread({
   communityId,
   path,
   image,
+  video,
 }: Params) {
   try {
     connectToDB();
@@ -259,6 +290,7 @@ export async function createThread({
       author,
       community: communityIdObject, // Assign communityId if provided, or leave it null for personal account
       image,
+      video,
     });
 
     // Update User model
@@ -654,7 +686,7 @@ export async function getReactionsData({
               threadId: post._id,
               userId,
             });
-            return { reactedUsers, reactedByUser, ratedUser, ratedByUser};
+            return { reactedUsers, reactedByUser, ratedUser, ratedByUser };
           })
         ),
       ]);
@@ -666,9 +698,7 @@ export async function getReactionsData({
       (data: any) => data.reactedByUser
     );
 
-    const childrenRatings = childrenData.map(
-      (data: any) => data.ratedUser
-    );
+    const childrenRatings = childrenData.map((data: any) => data.ratedUser);
     const childrenRatingsState = childrenData.map(
       (data: any) => data.ratedByUser
     );
@@ -679,7 +709,7 @@ export async function getReactionsData({
       childrenReactions,
       childrenReactionState,
       childrenRatings,
-      childrenRatingsState
+      childrenRatingsState,
     };
   } catch (error: any) {
     throw new Error(`Failed to get reactions data: ${error.message}`);

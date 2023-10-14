@@ -24,7 +24,13 @@ interface Props {
   threadVideo: string;
 }
 
-function PostThread({ userId, threadText, threadImage, threadId, threadVideo }: Props) {
+function RePostThread({
+  userId,
+  threadText,
+  threadImage,
+  threadId,
+  threadVideo,
+}: Props) {
   const router = useRouter();
   const { organization } = useOrganization();
 
@@ -128,44 +134,10 @@ function PostThread({ userId, threadText, threadImage, threadId, threadVideo }: 
           author: userId,
           communityId: organization ? organization.id : null,
           path: router?.asPath,
-          image: null,
-        });
-        console.log("thread upload");
-
-        router.push("/");
-        setLoading(false);
-        setNotification(true);
-      }
-    } catch (error) {
-      // Handle createThread error here
-      console.error("Error posting thread:", error);
-      setLoading(false);
-    }
-  };
-
-  const updateSubmit = async () => {
-    setLoading(true);
-    try {
-      if (files.length > 0) {
-        let imageToBeUpload = await startUpload(files);
-        await editThread({
-          threadId,
-          text: text,
-          path: router?.asPath,
-          image: imageToBeUpload[0]?.fileUrl,
-        });
-        console.log("image upload", imageToBeUpload);
-        router.push("/");
-        setLoading(false);
-        setNotification(true);
-      } else {
-        await editThread({
-          threadId,
-          text: text,
-          path: router?.asPath,
           image: threadImage,
+          video: threadVideo,
         });
-        console.log("thread upload");
+        console.log("stitch upload");
 
         router.push("/");
         setLoading(false);
@@ -234,14 +206,14 @@ function PostThread({ userId, threadText, threadImage, threadId, threadVideo }: 
       <Button
         type="button"
         className="bg-primary-500 d-flex gap-2 items-center justify-center"
-        onClick={threadText ? updateSubmit : onSubmit}
+        onClick={onSubmit}
         disabled={!text || loading}
       >
-        {`${threadText ? "Update" : "Post"}`} Stitch{" "}
+        Repost Stitch
         {loading && <CircularProgress size={18} />}
       </Button>
     </form>
   );
 }
 
-export default PostThread;
+export default RePostThread;

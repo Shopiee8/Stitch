@@ -35,6 +35,9 @@ export default function CustomImageContainer({ image }) {
       <div className="mt-4 cursor-pointer h-100 w-100">
         <Image
           src={image}
+          height={typeof window !== "undefined" && window?.innerWidth < 992 ? 400 : 600}
+          width={"100%"}
+          className="object-contain bg-dark-3 object-center border border-none rounded-md mt-2 cursor-pointer"
           PreviewType={{
             visible: false,
           }}

@@ -9,6 +9,8 @@ import {
   fetchThreadById,
   getRatedUserByThread,
   isThreadStaredByUser,
+  getReactedUsersByThread,
+  isThreadReactedByUser,
 } from "@/lib/actions/thread.actions";
 import UserCard from "@/components/cards/UserCard";
 
@@ -25,9 +27,18 @@ async function page({ params }: { params: { id: string } }) {
 
   const thread = await fetchThreadById(params.id);
 
-  const reactions = await getRatedUserByThread(thread._id);
+  /* ratings */
+  const ratings = await getRatedUserByThread(thread._id);
 
-  const reactionState = await isThreadStaredByUser({
+  const ratingState = await isThreadStaredByUser({
+    threadId: thread._id,
+    userId: userInfo._id,
+  });
+
+  /* reactions */
+  const reactions = await getReactedUsersByThread(thread._id);
+
+  const reactionState = await isThreadReactedByUser({
     threadId: thread._id,
     userId: userInfo._id,
   });
@@ -62,11 +73,11 @@ async function page({ params }: { params: { id: string } }) {
 
       <div className="mt-10">
         <h1 className="head-text mb-10">People who rated this stitch</h1>
-        {thread.reactionsCount === 0 ? (
+        {ratings.users.length === 0 ? (
           <p className="no-result">No users found</p>
         ) : (
           <>
-            {reactions.users.map((reaction: any) => (
+            {ratings.users.map((reaction: any) => (
               <div className="mb-2">
                 <UserCard
                   key={reaction._id}

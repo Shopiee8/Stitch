@@ -14,12 +14,14 @@ import {
   isUserFollowing,
 } from "@/lib/actions/user.actions";
 import UserCard from "@/components/cards/UserCard";
+import { getAllRatedUserByUserId } from "@/lib/actions/thread.actions";
 
 async function Page({ params }: { params: { id: string } }) {
   const user = await currentUser();
   if (!user) return null;
-
   const userInfo = await fetchUser(params.id);
+  let getRatedUserId = await getAllRatedUserByUserId(userInfo._id);
+  let ratedUsers = getRatedUserId.users;
   if (!userInfo?.onboarded) redirect("/onboarding");
 
   const followers = await fetchUsersByField(params.id, "followers");
@@ -31,6 +33,7 @@ async function Page({ params }: { params: { id: string } }) {
     <section>
       <ProfileHeader
         accountId={userInfo.id}
+        userId={userInfo._id}
         authUserId={user.id}
         name={userInfo.name}
         username={userInfo.username}
@@ -44,25 +47,34 @@ async function Page({ params }: { params: { id: string } }) {
           <TabsList className="tab">
             {profileTabs.map((tab) => (
               <TabsTrigger key={tab.label} value={tab.value} className="tab">
-                <img
-                  src={tab.icon}
-                  alt={tab.label}
-                  className="h-[24px] w-[24px] object-cover"
-                />
-                <p className="max-sm:hidden">{tab.label}</p>
+                <div className="max-md:block flex gap-2 items-center">
+                  <img
+                    src={tab.icon}
+                    alt={tab.label}
+                    className="h-[24px] w-[24px] object-cover"
+                  />
+                  <p className="max-md:text-ellipsis text-[12px] 2xl:text-[16px] max-md:text-[8px]">
+                    {tab.label}
+                  </p>
+                </div>
                 {tab.label === "Threads" && (
-                  <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
+                  <p className="ml-1 max-md:ml-0 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo.threadsCount}
                   </p>
                 )}
                 {tab.label === "Followers" && (
-                  <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
+                  <p className="ml-1 max-md:ml-0 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo.followersCount}
                   </p>
                 )}
                 {tab.label === "Following" && (
-                  <p className="ml-1 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
+                  <p className="ml-1 max-md:ml-0 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo.followingCount}
+                  </p>
+                )}
+                {tab.label === "Reviews" && (
+                  <p className="ml-1 max-md:ml-0 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
+                    {ratedUsers.length}
                   </p>
                 )}
               </TabsTrigger>
@@ -90,7 +102,7 @@ async function Page({ params }: { params: { id: string } }) {
                 <p className="no-result">No users found</p>
               ) : (
                 <>
-                  {followers.map((follower: any) => (
+                  {followers?.map((follower: any) => (
                     <UserCard
                       key={follower.id}
                       id={follower.id}
@@ -112,6 +124,27 @@ async function Page({ params }: { params: { id: string } }) {
               ) : (
                 <>
                   {following.map((following: any) => (
+                    <UserCard
+                      key={following.id}
+                      id={following.id}
+                      name={following.name}
+                      username={following.username}
+                      imgUrl={following.image}
+                      personType="User"
+                    />
+                  ))}
+                </>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reviews" className="w-full text-light-1">
+            <div className="mt-9 flex flex-col gap-10">
+              {ratedUsers.length === 0 ? (
+                <p className="no-result">No users found</p>
+              ) : (
+                <>
+                  {ratedUsers.map((following: any) => (
                     <UserCard
                       key={following.id}
                       id={following.id}

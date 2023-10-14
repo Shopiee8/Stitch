@@ -1,9 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import FollowUser from "../atoms/FollowUser";
+import { getAllRatedUserByUserId } from "@/lib/actions/thread.actions";
+import { currentUser } from "@clerk/nextjs";
+import { fetchUser, getUserAverageRatings } from "@/lib/actions/user.actions";
+import { StarIcon } from "@/public/svg";
+import { Tooltip } from "antd";
 
 interface Props {
   accountId: string;
+  userId: string;
   authUserId: string;
   name: string;
   username: string;
@@ -13,8 +19,9 @@ interface Props {
   isFollowing?: boolean;
 }
 
-function ProfileHeader({
+async function ProfileHeader({
   accountId,
+  userId,
   authUserId,
   name,
   username,
@@ -23,6 +30,9 @@ function ProfileHeader({
   type,
   isFollowing,
 }: Props) {
+  const dbUser = await fetchUser(accountId)
+  const averageStars = await getUserAverageRatings(dbUser._id);
+
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="flex items-center justify-between">
@@ -37,10 +47,47 @@ function ProfileHeader({
           </div>
 
           <div className="flex-1">
-            <h2 className="text-left text-heading3-bold text-light-1">
-              {name}
-            </h2>
+            <div>
+              <h2 className="text-left text-heading3-bold text-light-1">
+                {name}
+              </h2>
+            </div>
             <p className="text-base-medium text-gray-1">@{username}</p>
+            <div className="flex gap-2 items-center">
+                {averageStars ? (
+                  <>
+                    <Tooltip title="User Average Ratings" placement="top">
+                        <div className="flex gap-2 items-bottom cursor-pointer">
+                          <Image
+                            src="/assets/star-icon.svg"
+                            alt="star"
+                            width={14}
+                            height={14}
+                            className="cursor-pointer object-contain -mt-[0.15rem]"
+                          />
+                          <div className="flex gap-1 items-center">
+                            <div className="text-small-semibold text-light-1">
+                              {averageStars}
+                            </div>
+                          </div>
+                        </div>
+                    </Tooltip>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex gap-2 items-center">
+                      <div className=" text-small-semibold text-light-1">0</div>
+                      <Image
+                        src="/assets/star-icon.svg"
+                        alt="star"
+                        width={14}
+                        height={14}
+                        className="cursor-pointer object-contain -mt-[0.15rem]"
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
           </div>
         </div>
         {type !== "Community" && (

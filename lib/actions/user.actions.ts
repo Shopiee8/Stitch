@@ -277,15 +277,18 @@ export async function getActivity(userId: string) {
       (userThread) => userThread.children
     );
     const reactions = userThreads.flatMap((userThread) => userThread.reactions);
+    const ratings = userThreads.flatMap((userThread) => userThread.ratings);
 
     const [reactionsUsers, followersUsers] = await Promise.all([
-      User.find({ _id: { $in: reactions.map((reaction) => reaction.user) } }),
+      User.find({ _id: { $in: reactions.map((reactions) => reactions.user) } }),
       User.find({
         _id: {
           $in: user.followers.map((follower: { user: any }) => follower.user),
         },
       }),
     ]);
+
+
 
     const reactionsData = reactions.map((reaction, index) => {
       const reactingUser = reactionsUsers.find(
@@ -304,6 +307,30 @@ export async function getActivity(userId: string) {
         createdAt: reaction.createdAt,
         parentId: userThreads[0]._id.toString(),
         activityType: "reaction",
+      };
+    });
+
+    const [ratingsUsers] = await Promise.all([
+      User.find({ _id: { $in: ratings.map((ratings) => ratings.user) } }),
+    ]);
+
+    const ratingsData = ratings.map((ratings, index) => {
+      const ratingsData = ratingsUsers.find(
+        (user) => user._id.toString() === ratings.user.toString()
+      );
+
+      if (ratingsData._id.equals(userId)) return null;
+      return {
+        author: {
+          name: ratingsData.name,
+          username: ratingsData.username,
+          image: ratingsData.image,
+          _id: ratingsData._id,
+          id: ratingsData.id,
+        },
+        createdAt: ratings.createdAt,
+        parentId: userThreads[0]._id.toString(),
+        activityType: "ratings",
       };
     });
 
@@ -340,7 +367,7 @@ export async function getActivity(userId: string) {
       reactionsData.concat(followersData),
     ]);
 
-    const activity = [...replies, ...reactionsAndFollowers]
+    const activity = [...replies, ...reactionsAndFollowers, ...ratingsData]
       .filter((i) => i !== null)
       .sort((a, b) => b?.createdAt - a?.createdAt);
 
@@ -348,5 +375,33 @@ export async function getActivity(userId: string) {
   } catch (error) {
     console.error("Error fetching activity: ", error);
     throw error;
+  }
+}
+
+export async function getUserAverageRatings(userId: any) {
+  try {
+    connectToDB();
+
+    // Find all threads where the user is the author
+    const threads = await Thread.find({ author: userId });
+
+    // Initialize variables to calculate average
+    let totalStars = 0;
+    let totalRatings = 0;
+
+    // Loop through each thread and extract stars ratings
+    threads.forEach((thread) => {
+      thread.ratings.forEach((rating) => {
+        totalStars += rating.stars;
+        totalRatings += 1;
+      });
+    });
+
+    // Calculate the average rating
+    const averageRating = Math.round(totalStars / totalRatings);
+
+    return averageRating; // Return the average rating
+  } catch (error) {
+    throw new Error(`Failed to get user's average rating: ${error.message}`);
   }
 }

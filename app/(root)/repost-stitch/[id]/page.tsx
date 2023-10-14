@@ -1,4 +1,4 @@
-import PostThread from "@/components/forms/PostThread";
+import RePostThread from "@/components/forms/Repostthread";
 import { fetchThreadById } from "@/lib/actions/thread.actions";
 import { fetchUser } from "@/lib/actions/user.actions";
 import { currentUser } from "@clerk/nextjs";
@@ -18,9 +18,9 @@ const Page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <h1 className="head-text">Edit Thread</h1>
+      <h1 className="head-text">Reopost Stitch</h1>
 
-      <PostThread
+      <RePostThread
         userId={userInfo._id}
         threadId={thread._id}
         threadText={thread.text}
