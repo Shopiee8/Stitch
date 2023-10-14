@@ -59,7 +59,7 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
                 <img
                   src={currentUserImg}
                   alt="Profile image"
-                  className="h-[47px] w-[53px] rounded-full object-cover"
+                  className="h-[48px] w-[52px] rounded-full object-cover"
                 />
               </FormLabel>
               <FormControl className="border-none bg-transparent">

@@ -96,7 +96,7 @@ async function ThreadCard({
               <img
                 src={author.image}
                 alt="Profile image"
-                className=" h-11 w-11 cursor-pointer rounded-full"
+                className=" h-11 w-11 cursor-pointer rounded-full object-cover"
               />
             </Link>
 
@@ -104,7 +104,7 @@ async function ThreadCard({
           </div>
 
           <div className="flex w-full flex-col">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-start">
               <div>
                 <Link
                   href={`/profile/${author.id}`}
@@ -114,97 +114,109 @@ async function ThreadCard({
                     {author.name}
                   </h4>
                 </Link>
-              </div>
-              {isEditable && (
-                <>
-                  <div className="flex flex-row gap-2">
-                    <Tooltip title="Delete" placement="top">
-                      <DeleteThread
-                        threadId={JSON.stringify(id)}
-                        currentUserId={currentUserId}
-                        authorId={author.id}
-                        parentId={parentId}
-                        isComment={isComment}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Edit" placement="top">
-                      <EditThread
-                        threadId={JSON.stringify(id)}
-                        currentUserId={currentUserId}
-                        authorId={author.id}
-                      />
-                    </Tooltip>
-                  </div>
-                </>
-              )}
-              {ratings ? (
-                <>
-                  <Link href={`/thread/ratings/${id}`}>
-                    <div className="flex gap-2 items-bottom cursor-pointer">
-                      <div className="flex gap-1 items-center">
-                        <div className="text-small-semibold text-light-1 cursor-pointer">
-                          {ratings.length > 0 ? (
-                            <div>
-                              {ratings?.length}
-                              {ratings.length > 1 ? " folks" : " folk"} rated 🙏
+                <div className="flex gap-2 items-start">
+                  {averageStars ? (
+                    <>
+                      <Tooltip title="User Average Ratings" placement="top">
+                        <div className="flex gap-1 items-bottom cursor-pointer">
+                          <Image
+                            src="/assets/star-icon.svg"
+                            alt="star"
+                            width={14}
+                            height={14}
+                            className="cursor-pointer object-contain -mt-[0.15rem]"
+                          />
+                          <div className="flex gap-1 items-center">
+                            <div className="text-small-semibold text-light-1">
+                              {averageStars}
                             </div>
-                          ) : (
-                            ""
-                          )}
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <div className="flex gap-2 items-center">
-                    <div className=" text-small-semibold text-light-1">0</div>
-                    <Image
-                      src="/assets/star-icon.svg"
-                      alt="star"
-                      width={14}
-                      height={14}
-                      className="cursor-pointer object-contain -mt-[0.15rem]"
-                    />
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="flex gap-2 items-center">
-              {averageStars ? (
-                <>
-                  <Tooltip title="User Average Ratings" placement="top">
-                    <div className="flex gap-1 items-bottom cursor-pointer">
-                      <Image
-                        src="/assets/star-icon.svg"
-                        alt="star"
-                        width={14}
-                        height={14}
-                        className="cursor-pointer object-contain -mt-[0.15rem]"
-                      />
-                      <div className="flex gap-1 items-center">
-                        <div className="text-small-semibold text-light-1">
-                          {averageStars}
+                      </Tooltip>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex gap-2 items-center">
+                        <div className=" text-small-semibold text-light-1">
+                          0
                         </div>
+                        <Image
+                          src="/assets/star-icon.svg"
+                          alt="star"
+                          width={14}
+                          height={14}
+                          className="cursor-pointer object-contain -mt-[0.15rem]"
+                        />
                       </div>
-                    </div>
-                  </Tooltip>
-                </>
-              ) : (
-                <>
-                  <div className="flex gap-2 items-center">
-                    <div className=" text-small-semibold text-light-1">0</div>
-                    <Image
-                      src="/assets/star-icon.svg"
-                      alt="star"
-                      width={14}
-                      height={14}
-                      className="cursor-pointer object-contain -mt-[0.15rem]"
-                    />
-                  </div>
-                </>
-              )}
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-1 justify-end">
+                <div>
+                  {ratings ? (
+                    <>
+                      <Link href={`/thread/ratings/${id}`}>
+                        <div className="flex gap-2 items-bottom cursor-pointer">
+                          <div className="flex gap-1 items-center">
+                            <div className="text-small-semibold text-light-1 cursor-pointer">
+                              {ratings.length > 0 ? (
+                                <div>
+                                  {ratings?.length}
+                                  {ratings.length > 1 ? " folks" : " folk"}{" "}
+                                  rated 🙏
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex gap-2 items-center">
+                        <div className=" text-small-semibold text-light-1">
+                          0
+                        </div>
+                        <Image
+                          src="/assets/star-icon.svg"
+                          alt="star"
+                          width={14}
+                          height={14}
+                          className="cursor-pointer object-contain -mt-[0.15rem]"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div>
+                  {isEditable && (
+                    <>
+                      <div className="flex flex-row gap-2">
+                        <Tooltip title="Delete" placement="top">
+                          <DeleteThread
+                            threadId={JSON.stringify(id)}
+                            currentUserId={currentUserId}
+                            authorId={author.id}
+                            parentId={parentId}
+                            isComment={isComment}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Edit" placement="top">
+                          <EditThread
+                            threadId={JSON.stringify(id)}
+                            currentUserId={currentUserId}
+                            authorId={author.id}
+                          />
+                        </Tooltip>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
             <p className="mt-2 text-small-regular text-light-2">{content}</p>
