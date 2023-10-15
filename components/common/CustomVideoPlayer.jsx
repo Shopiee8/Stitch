@@ -8,7 +8,7 @@ export default function CustomVideoPlayer({ url }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMute, setIsMute] = useState(false);
   const playerRef = useRef(null);
-  const [buffering, setBuffering] = useState(true);
+  const [buffering, setBuffering] = useState(false);
 
   const handleBuffering = () => {
     setBuffering(true);
@@ -19,9 +19,6 @@ export default function CustomVideoPlayer({ url }) {
     setIsPlaying(true);
   };
 
-  const handleCanPlayThrough = () => {
-    setBuffering(false);
-  };
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -51,13 +48,7 @@ export default function CustomVideoPlayer({ url }) {
     }
   };
 
-  useEffect(() => {
-    const video = playerRef.current;
-    video?.addEventListener("canplaythrough", handleCanPlayThrough);
-    return () => {
-      video?.removeEventListener("canplaythrough", handleCanPlayThrough);
-    };
-  }, [playerRef.current]);
+
 
   useEffect(() => {
     const video = playerRef.current;

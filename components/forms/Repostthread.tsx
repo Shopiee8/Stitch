@@ -56,15 +56,19 @@ function RePostThread({
   const handleImage = async (e) => {
     e.preventDefault();
     const fileReader = new FileReader();
-
+  
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       const fileType = file.type;
+      const fileSize = file.size / 1024 / 1024; // Size in MB
+  
       console.log(fileType);
-      if (fileType.includes("image/")) {
+  
+      if (fileType.includes("image/") && fileSize <= 4) {
+        // Check if it's an image and within the size limit
         setImagePreview(null);
         setFiles(Array.from(e.target.files));
-
+  
         fileReader.onload = async (event) => {
           const imageDataUrl = event.target?.result;
           if (imageDataUrl) {
@@ -72,27 +76,36 @@ function RePostThread({
             setFileType("image");
           }
         };
-
+  
         fileReader.readAsDataURL(file);
+      } else if (fileType.includes("video/") && fileSize <= 10) {
+        // Check if it's a video and within the size limit
+        const video = document.createElement('video');
+        video.preload = 'metadata';
+  
+        video.onloadedmetadata = () => {
+          const duration = video.duration;
+          if (duration >= 120) {
+            alert("Video duration is greater than 2 minutes.");
+          } else {
+            setFiles(Array.from(e.target.files));
+  
+            fileReader.onload = async (event) => {
+              const videoDataUrl = event.target?.result;
+              if (videoDataUrl) {
+                setVideoPreview(videoDataUrl);
+                setFileType("video");
+              }
+            };
+  
+            fileReader.readAsDataURL(file);
+            setVideoPreview(true);
+          }
+        };
+  
+        video.src = URL.createObjectURL(file);
       } else {
-        let fileDuaration = file.duration;
-        if (fileDuaration > 120) {
-          alert("File duration is greater than 2 minutes.");
-          return false;
-        } else {
-          setFiles(Array.from(e.target.files));
-
-          fileReader.onload = async (event) => {
-            const imageDataUrl = event.target?.result;
-            if (imageDataUrl) {
-              setVideoPreview(imageDataUrl);
-              setFileType("video");
-            }
-          };
-
-          fileReader.readAsDataURL(file);
-          setVideoPreview(true);
-        }
+        alert("Invalid file format or size.");
       }
     }
   };
