@@ -26,7 +26,6 @@ async function CommunityProfileHeader({
   isFollowing,
 }: Props) {
   const user = await currentUser();
-  if (!user) return null;
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="flex items-center justify-between">
@@ -49,7 +48,7 @@ async function CommunityProfileHeader({
         </div>
 
         <div className="flex flex-row gap-2">
-          {user.id == accountId && (
+          {user?.id == accountId && (
             <>
               <Link href={`/communities/edit/${accountId}`}>
                 <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
