@@ -46,7 +46,7 @@ function CommunityProfileHeader({
 
         <div className="flex flex-row gap-2">
           <>
-            <Link href={`/community/edit/${accountId}`}>
+            <Link href={`/communities/edit/${accountId}`}>
               <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
                 <Image
                   src="/assets/edit.svg"

@@ -1,8 +1,3 @@
-import { currentUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-
-import { fetchUser } from "@/lib/actions/user.actions";
-import AccountProfile from "@/components/forms/AccountProfile";
 import { fetchCommunityDetails } from "@/lib/actions/community.actions";
 import CommunityAccountProfile from "@/components/forms/CommunityAccountProfile";
 
@@ -26,7 +21,7 @@ async function Page({ params }: { params: { id: string } }) {
       <p className="mt-3 text-base-regular text-light-2">Make any changes</p>
 
       <section className="mt-12">
-        {/* <CommunityAccountProfile user={userData} btnTitle="Update" /> */}
+        <CommunityAccountProfile user={userData} btnTitle="Update" />
       </section>
     </>
   );
