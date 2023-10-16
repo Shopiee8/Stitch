@@ -117,7 +117,7 @@ export default function CustomVideoPlayer({ url }) {
         <video
           ref={playerRef}
           src={url}
-          className={`max-h-[600px] max-md:max-h-[400px] w-full ${videoAspectRatio > 1 ? "max-md:object-cover" : "max-md:object-contain"} object-contain`}
+          className={`max-h-[600px] max-md:h-[400px] w-full ${videoAspectRatio > 1 ? "max-md:object-cover" : "max-md:object-contain"} object-contain`}
           autoPlay={isPlaying}
           controls={false}
           muted={isMute}
