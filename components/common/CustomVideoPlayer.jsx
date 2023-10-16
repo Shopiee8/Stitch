@@ -20,6 +20,11 @@ export default function CustomVideoPlayer({ url }) {
     setIsPlaying(true);
   };
 
+  const handleEnded = () => {
+    setBuffering(false);
+    setIsPlaying(false);
+  };
+
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
     if (playerRef.current) {
@@ -52,6 +57,7 @@ export default function CustomVideoPlayer({ url }) {
     const video = playerRef.current;
     video.addEventListener("waiting", handleBuffering);
     video.addEventListener("playing", handlePlaying);
+    video.addEventListener("ended", handleEnded);
     video.addEventListener("loadedmetadata", () => {
       const aspectRatio = video.videoWidth / video.videoHeight;
       setVideoAspectRatio(aspectRatio);
@@ -62,6 +68,7 @@ export default function CustomVideoPlayer({ url }) {
     return () => {
       video.removeEventListener("waiting", handleBuffering);
       video.removeEventListener("playing", handlePlaying);
+      video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadedmetadata", () => {
         const aspectRatio = video.videoWidth / video.videoHeight;
         setVideoAspectRatio(aspectRatio);
