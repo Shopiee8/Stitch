@@ -70,11 +70,6 @@ const CommunityAccountProfile = ({ user, btnTitle }: Props) => {
       // Call the updateCommunityInfo function to update the community's information
       await updateCommunityInfo(user.id, values.name, values.username, values.profile_photo, values.bio);
 
-      if (pathname === "/profile/edit") {
-        router.back();
-      } else {
-        router.push("/");
-      }
     } catch (error) {
       // Handle any errors here
       console.error("Error updating community information:", error);
