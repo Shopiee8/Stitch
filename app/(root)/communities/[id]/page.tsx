@@ -20,7 +20,7 @@ async function Page({ params }: { params: { id: string } }) {
   return (
     <section>
       <CommunityProfileHeader
-        accountId={communityDetails.id}
+        accountId={params.id}
         authUserId={communityDetails.createdBy}
         name={communityDetails.name}
         username={communityDetails.username}
