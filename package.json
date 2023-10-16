@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev_local": "cross-env NODE_ENV=local next dev",
+    "dev_production": "cross-env NODE_ENV=production next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -48,5 +49,8 @@
     "typescript": "5.2.2",
     "uploadthing": "^5.4.0",
     "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

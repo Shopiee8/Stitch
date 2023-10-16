@@ -135,7 +135,7 @@
 
 /* Tab */
 .tab {
-  @apply flex min-h-[50px] flex-1 items-center gap-3 bg-dark-2 text-light-2 data-[state=active]:bg-[#0e0e12] data-[state=active]:text-light-2  max-md:rounded-md max-md:pl-1 max-md:pr-1 !important;
+  @apply flex min-h-[50px] flex-1 items-center gap-3 max-md:gap-1 bg-dark-2 text-light-2 data-[state=active]:bg-[#0e0e12] data-[state=active]:text-light-2  max-md:rounded-md max-md:pl-1 max-md:pr-1 !important;
 }
 
 .no-focus {

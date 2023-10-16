@@ -23,7 +23,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 
 import { UserValidation } from "@/lib/validations/user";
-import { updateUser } from "@/lib/actions/user.actions";
+import { updateCommunityInfo } from "@/lib/actions/community.actions";
 
 interface Props {
   user: {
@@ -37,7 +37,7 @@ interface Props {
   btnTitle: string;
 }
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+const CommunityAccountProfile = ({ user, btnTitle }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const { startUpload } = useUploadThing("media");
@@ -66,19 +66,18 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
       }
     }
 
-    await updateUser({
-      name: values.name,
-      path: pathname,
-      username: values.username,
-      userId: user.id,
-      bio: values.bio,
-      image: values.profile_photo,
-    });
+    try {
+      // Call the updateCommunityInfo function to update the community's information
+      await updateCommunityInfo(user.id, values.name, values.username, values.profile_photo, values.bio);
 
-    if (pathname === "/profile/edit") {
-      router.back();
-    } else {
-      router.push("/");
+      if (pathname === "/profile/edit") {
+        router.back();
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      // Handle any errors here
+      console.error("Error updating community information:", error);
     }
   };
 
@@ -92,7 +91,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setFiles(Array.from(e.target.files));
+      setFiles(Array from(e.target.files));
 
       if (!file.type.includes("image")) return;
 
@@ -172,7 +171,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
           render={({ field }) => (
             <FormItem className='flex w-full flex-col gap-3'>
               <FormLabel className='text-base-semibold text-light-2'>
-                Username
+                Community Name
               </FormLabel>
               <FormControl>
                 <Input
@@ -214,4 +213,4 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
   );
 };
 
-export default AccountProfile;
+export default CommunityAccountProfile;

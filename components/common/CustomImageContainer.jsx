@@ -28,7 +28,7 @@ export default function CustomImageContainer({ image }) {
       <div className="mt-4 cursor-pointer h-100 w-100 max-md:hidden">
         <Image
           src={image}
-          height={600}
+          height={500}
           width={"100%"}
           className="object-contain bg-dark-3 object-center border border-none rounded-md mt-2 cursor-pointer"
           PreviewType={{
@@ -61,7 +61,7 @@ export default function CustomImageContainer({ image }) {
       <div className="mt-4 cursor-pointer h-100 w-100 hidden max-md:block">
         <Image
           src={image}
-          height={400}
+          height={350}
           width={"100%"}
           className="object-contain bg-dark-3 object-center border border-none rounded-md mt-2 cursor-pointer"
           PreviewType={{

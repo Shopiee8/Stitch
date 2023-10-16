@@ -9,6 +9,7 @@ export default function CustomVideoPlayer({ url }) {
   const [isMute, setIsMute] = useState(false);
   const playerRef = useRef(null);
   const [buffering, setBuffering] = useState(false);
+  const [videoAspectRatio, setVideoAspectRatio] = useState(16 / 9); // Default aspect ratio
 
   const handleBuffering = () => {
     setBuffering(true);
@@ -18,7 +19,6 @@ export default function CustomVideoPlayer({ url }) {
     setBuffering(false);
     setIsPlaying(true);
   };
-
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -48,30 +48,36 @@ export default function CustomVideoPlayer({ url }) {
     }
   };
 
-
-
   useEffect(() => {
     const video = playerRef.current;
     video.addEventListener("waiting", handleBuffering);
     video.addEventListener("playing", handlePlaying);
+    video.addEventListener("loadedmetadata", () => {
+      const aspectRatio = video.videoWidth / video.videoHeight;
+      setVideoAspectRatio(aspectRatio);
+    });
 
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       video.removeEventListener("waiting", handleBuffering);
       video.removeEventListener("playing", handlePlaying);
+      video.removeEventListener("loadedmetadata", () => {
+        const aspectRatio = video.videoWidth / video.videoHeight;
+        setVideoAspectRatio(aspectRatio);
+      });
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [playerRef.current]);
+  }, []);
 
   const toggleMute = () => {
     setIsMute(!isMute);
   };
 
   return (
-    <div className="relative h-100 w-100 bg-dark-3">
+    <div className="relative h-full w-full bg-dark-3">
       <div
-        className={`h-[100%] w-[100%] absolute cursor-pointer flex items-center justify-center z-10 transition-all`}
+        className={`h-full w-full absolute cursor-pointer flex items-center justify-center z-10 transition-all`}
         onClick={togglePlayPause}
       >
         {buffering ? (
@@ -104,16 +110,10 @@ export default function CustomVideoPlayer({ url }) {
         <video
           ref={playerRef}
           src={url}
-          className="h-[600px] max-md:h-[400px] w-100 object-center"
-          playing={isPlaying}
+          className={`max-h-[600px] max-md:max-h-[400px] w-full ${videoAspectRatio > 1 ? "max-md:object-cover" : "max-md:object-contain"} object-contain`}
+          autoPlay={isPlaying}
           controls={false}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
           muted={isMute}
-          style={{
-            display: "block", // Ensure it's a block-level element
-            margin: "0 auto", // Auto margin horizontally centers the video
-          }}
         />
       </div>
     </div>
