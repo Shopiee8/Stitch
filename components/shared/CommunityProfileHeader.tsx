@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import FollowUser from "../atoms/FollowUser";
+import { currentUser } from "@clerk/nextjs";
+import { fetchUser } from "@/lib/actions/user.actions";
 
 interface Props {
   accountId: string;
@@ -13,7 +15,7 @@ interface Props {
   isFollowing?: boolean;
 }
 
-function CommunityProfileHeader({
+async function CommunityProfileHeader({
   accountId,
   authUserId,
   name,
@@ -23,6 +25,11 @@ function CommunityProfileHeader({
   type,
   isFollowing,
 }: Props) {
+  const user = await currentUser();
+  if (!user) return null;
+
+  const userInfo = await fetchUser(user.id);
+
   return (
     <div className="flex w-full flex-col justify-start">
       <div className="flex items-center justify-between">
@@ -45,22 +52,22 @@ function CommunityProfileHeader({
         </div>
 
         <div className="flex flex-row gap-2">
-          <>
-            <Link href={`/communities/edit/${accountId}`}>
-              <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
-                <Image
-                  src="/assets/edit.svg"
-                  alt="logout"
-                  width={16}
-                  height={16}
-                />
+          {userInfo._id == authUserId && (
+            <>
+              <Link href={`/communities/edit/${accountId}`}>
+                <div className="flex cursor-pointer gap-3 rounded-lg bg-dark-3 px-4 py-2">
+                  <Image
+                    src="/assets/edit.svg"
+                    alt="logout"
+                    width={16}
+                    height={16}
+                  />
 
-                <p className="text-light-2 max-sm:hidden">
-                  Edit Community Details
-                </p>
-              </div>
-            </Link>
-          </>
+                  <p className="text-light-2 max-sm:hidden">Edit Bio</p>
+                </div>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 

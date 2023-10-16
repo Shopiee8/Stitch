@@ -21,7 +21,7 @@ async function Page({ params }: { params: { id: string } }) {
       <p className="mt-3 text-base-regular text-light-2">Make any changes</p>
 
       <section className="mt-12">
-        <CommunityAccountProfile user={userData} btnTitle="Update" />
+        <CommunityAccountProfile user={userData} btnTitle="Update Bio" />
       </section>
     </>
   );

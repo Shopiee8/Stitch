@@ -21,7 +21,7 @@ async function Page({ params }: { params: { id: string } }) {
     <section>
       <CommunityProfileHeader
         accountId={communityDetails.id}
-        authUserId={user.id}
+        authUserId={communityDetails.createdBy}
         name={communityDetails.name}
         username={communityDetails.username}
         imgUrl={communityDetails.image}

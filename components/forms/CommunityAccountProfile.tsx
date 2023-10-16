@@ -70,9 +70,13 @@ const CommunityAccountProfile = ({ user, btnTitle }: Props) => {
       // Call the updateCommunityInfo function to update the community's information
       await updateCommunityInfo(user.id, values.name, values.username, values.profile_photo, values.bio);
 
+      router.back();
+
     } catch (error) {
       // Handle any errors here
       console.error("Error updating community information:", error);
+      router.back();
+
     }
   };
 
@@ -105,6 +109,7 @@ const CommunityAccountProfile = ({ user, btnTitle }: Props) => {
         className='flex flex-col justify-start gap-10'
         onSubmit={form.handleSubmit(onSubmit)}
       >
+        <div className="hidden">
         <FormField
           control={form.control}
           name='profile_photo'
@@ -179,6 +184,7 @@ const CommunityAccountProfile = ({ user, btnTitle }: Props) => {
             </FormItem>
           )}
         />
+        </div>
 
         <FormField
           control={form.control}
