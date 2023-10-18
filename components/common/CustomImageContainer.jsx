@@ -25,45 +25,10 @@ export default function CustomImageContainer({ image }) {
   };
   return (
     <>
-      <div className="mt-4 cursor-pointer h-100 w-100 max-md:hidden">
+      <div className="mt-4 cursor-pointer max-h-[600px] rounded-lg max-md:max-h-[400px] w-full">
         <Image
           src={image}
-          height={500}
-          width={"100%"}
-          className="object-contain bg-dark-3 object-center border border-none rounded-md mt-2 cursor-pointer"
-          PreviewType={{
-            visible: false,
-          }}
-          preview={{
-            mask: false,
-            maskProps: false,
-            maskClosable: false,
-            toolbarRender: (
-              _,
-              {
-                transform: { scale },
-                actions: {
-                  onZoomOut,
-                  onZoomIn,
-                },
-              }
-            ) => (
-              <Space size={24} className="toolbar-wrapper">
-                <DownloadOutlined className=" text-[24px]" onClick={onDownload} />
-                <ZoomOutOutlined className=" text-[24px]" disabled={scale === 1} onClick={onZoomOut} />
-                <ZoomInOutlined className=" text-[24px]" disabled={scale === 50} onClick={onZoomIn} />
-              </Space>
-            ),
-          }}
-        />
-      </div>
-
-      <div className="mt-4 cursor-pointer h-100 w-100 hidden max-md:block">
-        <Image
-          src={image}
-          height={350}
-          width={"100%"}
-          className="object-contain bg-dark-3 object-center border border-none rounded-md mt-2 cursor-pointer"
+          className="object-contain bg-dark-3 object-center border border-none rounded-lg  mt-2 cursor-pointer"
           PreviewType={{
             visible: false,
           }}

@@ -9,11 +9,11 @@ export default function CustomVideoPlayer({ url }) {
   const [isMute, setIsMute] = useState(false);
   const playerRef = useRef(null);
   const [buffering, setBuffering] = useState(false);
-  const [videoAspectRatio, setVideoAspectRatio] = useState(16 / 9); // Default aspect ratio
 
   const handleBuffering = () => {
     setBuffering(true);
   };
+
 
   const handlePlaying = () => {
     setBuffering(false);
@@ -58,21 +58,12 @@ export default function CustomVideoPlayer({ url }) {
     video.addEventListener("waiting", handleBuffering);
     video.addEventListener("playing", handlePlaying);
     video.addEventListener("ended", handleEnded);
-    video.addEventListener("loadedmetadata", () => {
-      const aspectRatio = video.videoWidth / video.videoHeight;
-      setVideoAspectRatio(aspectRatio);
-    });
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
       video.removeEventListener("waiting", handleBuffering);
       video.removeEventListener("playing", handlePlaying);
       video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("loadedmetadata", () => {
-        const aspectRatio = video.videoWidth / video.videoHeight;
-        setVideoAspectRatio(aspectRatio);
-      });
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -82,7 +73,7 @@ export default function CustomVideoPlayer({ url }) {
   };
 
   return (
-    <div className="relative h-full w-full bg-dark-3">
+    <div className="relative h-full w-full  rounded-lg">
       <div
         className={`h-full w-full absolute cursor-pointer flex items-center justify-center z-10 transition-all`}
         onClick={togglePlayPause}
@@ -100,7 +91,7 @@ export default function CustomVideoPlayer({ url }) {
         )}
       </div>
       <div
-        className="absolute bottom-4 right-6 cursor-pointer flex items-center justify-center z-10"
+        className="absolute bottom-4 right-6 cursor-pointer flex items-center justify-center z-10 "
         onClick={toggleMute}
       >
         {isMute ? (
@@ -117,7 +108,8 @@ export default function CustomVideoPlayer({ url }) {
         <video
           ref={playerRef}
           src={url}
-          className={`max-h-[600px] max-md:h-[400px] w-full ${videoAspectRatio > 1 ? "max-md:object-cover" : "max-md:object-contain"} object-contain`}
+          className={`max-h-[600px] rounded-lg max-md:max-h-[400px] w-full max-md:object-cover
+          object-contain`}
           autoPlay={isPlaying}
           controls={false}
           muted={isMute}
