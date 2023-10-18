@@ -109,6 +109,7 @@ function PostThread({ userId, threadText, threadImage, threadId, threadVideo }: 
     setLoading(true);
     try {
       if (files.length > 0) {
+        
         if (fileType == "image") {
           let imageToBeUpload = await startUpload(files);
           await createThread({
