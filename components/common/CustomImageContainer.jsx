@@ -25,10 +25,13 @@ export default function CustomImageContainer({ image }) {
   };
   return (
     <>
-      <div className="mt-4 cursor-pointer max-h-[600px] rounded-lg max-md:max-h-[400px] w-full">
+      <div className="mt-4 cursor-pointer max-h-[600px] rounded-lg max-md:max-h-[400px] w-fit">
         <Image
           src={image}
-          className="object-contain bg-dark-3 object-center border border-none rounded-lg  mt-2 cursor-pointer"
+          className="object-contain object-center border border-none rounded-lg cursor-pointer w-fit max-h-[600px]"
+          height={"100%"}
+          width={"100%"}
+          style={{borderRadius: "0.625rem"}}
           PreviewType={{
             visible: false,
           }}
@@ -38,18 +41,23 @@ export default function CustomImageContainer({ image }) {
             maskClosable: false,
             toolbarRender: (
               _,
-              {
-                transform: { scale },
-                actions: {
-                  onZoomOut,
-                  onZoomIn,
-                },
-              }
+              { transform: { scale }, actions: { onZoomOut, onZoomIn } }
             ) => (
               <Space size={24} className="toolbar-wrapper">
-                <DownloadOutlined className=" text-[24px]" onClick={onDownload} />
-                <ZoomOutOutlined className=" text-[24px]" disabled={scale === 1} onClick={onZoomOut} />
-                <ZoomInOutlined className=" text-[24px]" disabled={scale === 50} onClick={onZoomIn} />
+                <DownloadOutlined
+                  className=" text-[24px]"
+                  onClick={onDownload}
+                />
+                <ZoomOutOutlined
+                  className=" text-[24px]"
+                  disabled={scale === 1}
+                  onClick={onZoomOut}
+                />
+                <ZoomInOutlined
+                  className=" text-[24px]"
+                  disabled={scale === 50}
+                  onClick={onZoomIn}
+                />
               </Space>
             ),
           }}
