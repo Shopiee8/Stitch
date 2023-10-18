@@ -57,7 +57,7 @@ async function Page({ params }: { params: { id: string } }) {
                     {tab.label}
                   </p>
                 </div>
-                {tab.label === "Stitchs" && (
+                {tab.label === "Threads" && (
                   <p className="ml-1 max-md:ml-0 rounded-sm bg-light-4 px-2 py-1 !text-tiny-medium text-light-2">
                     {userInfo.threadsCount}
                   </p>
