@@ -37,7 +37,7 @@ export const sidebarLinks = [
   ];
   
   export const profileTabs = [
-    { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
+    { value: "threads", label: "Stitches", icon: "/assets/reply.svg" },
     { value: "followers", label: "Followers", icon: "/assets/members.svg" },
     { value: "following", label: "Following", icon: "/assets/members.svg" },
     { value: "reviews", label: "Reviews", icon: "/assets/members.svg" },
@@ -46,7 +46,7 @@ export const sidebarLinks = [
   ];
   
   export const communityTabs = [
-    { value: "threads", label: "Threads", icon: "/assets/reply.svg" },
+    { value: "threads", label: "Stitches", icon: "/assets/reply.svg" },
     { value: "members", label: "Members", icon: "/assets/members.svg" },
     { value: "requests", label: "Requests", icon: "/assets/request.svg" },
   ];
